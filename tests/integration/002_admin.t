@@ -129,4 +129,7 @@ $mech->submit_form_ok({
 }, 'add mailing list');
 $mech->content_like(qr/Success/);
 
+$mech->get("$base/interfaces/php/admin/people/mailinglists/view");
+$mech->content_unlike(qr/Sorry/);
+
 done_testing;
