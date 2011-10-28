@@ -2,6 +2,7 @@ package Test::Cashmusic;
 
 use strict;
 use warnings;
+use HTML::Lint;
 use Test::WWW::Mechanize;
 use parent 'Exporter';
 #use Carp::Always;
@@ -9,7 +10,8 @@ our @EXPORT_OK = qw/mech login_ok/;
 
 my $base = $ENV{CASHMUSIC_TEST_URL} || 'http://localhost:80';
 # This is temporary until I add a feature to allow a custom lint object
-my $mech = Test::WWW::Mechanize->new(autolint => 0);
+my $lint = HTML::Lint->new( only_types => HTML::Lint::Error::STRUCTURE );
+my $mech = Test::WWW::Mechanize->new( autolint => $lint );
 
 BEGIN {
     # Run the test installer every time we run these tests
