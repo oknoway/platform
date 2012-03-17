@@ -31,7 +31,7 @@ class DwollaSeedTests extends UnitTestCase {
 		);
 	}
 
-	function testMailchimpSeed(){
+	function testDwollaSeedCreation(){
 		if($this->dwolla_username) {
 			$pp = new DwollaSeed($this->cash_user_id, $this->dwolla_connection_id);
 			$this->assertIsa($pp, 'DwollaSeed');
@@ -41,7 +41,7 @@ class DwollaSeedTests extends UnitTestCase {
 		}
 	}
 
-	function testSet(){
+	function testSetExpressCheckout(){
 		if($this->dwolla_username) {
 			$pp = new DwollaSeed($this->cash_user_id, $this->dwolla_connection_id);
 			$redirect_url = $pp->setExpressCheckout(
