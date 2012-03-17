@@ -1,0 +1,14 @@
+{
+    "name":"Dwolla",
+    "description":"Dwolla issues an API username (generally your email), an API password, and an API signature.",
+    "type":"com.dwolla",
+    "scope":["commerce"],
+    "dataTypes":
+        {
+            "key"   :"string",
+            "secret":"string",
+            "oauth_callback":"string",
+            "payment_callback":"string",
+            "payment_redirect":"string",
+        }
+}
