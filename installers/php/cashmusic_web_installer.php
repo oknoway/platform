@@ -513,6 +513,7 @@ if (!isset($_POST['installstage'])) {
 			*/
 			
 			$admin_dir = rtrim(dirname($_SERVER['REQUEST_URI']),'/') . '/admin';
+			$api_dir = rtrim(dirname($_SERVER['REQUEST_URI']),'/') . '/api';
 
 			$user_settings = array(
 				'frameworklocation' => (string)$_POST['frameworklocation'],
@@ -541,11 +542,12 @@ if (!isset($_POST['installstage'])) {
 			// modify settings files
 			if (
 				!findReplaceInFile('./source/interfaces/php/admin/.htaccess','RewriteBase /interfaces/php/admin','RewriteBase ' . $admin_dir) || 
+				!findReplaceInFile('./source/interfaces/php/api/.htaccess','RewriteBase /interfaces/php/api','RewriteBase ' . $api_dir) || 
+				
+				!findReplaceInFile('./source/interfaces/php/public/constants.php','$cashmusic_root = $root . "/../../../framework/php/cashmusic.php','$cashmusic_root = "' . $user_settings['frameworklocation'] . '/framework/cashmusic.php') || 
 				
 				!findReplaceInFile('./source/interfaces/php/admin/constants.php','$cashmusic_root = $root . "/../../../framework/php/cashmusic.php','$cashmusic_root = "' . $user_settings['frameworklocation'] . '/framework/cashmusic.php') || 
 				!findReplaceInFile('./source/interfaces/php/admin/constants.php','define(\'ADMIN_WWW_BASE_PATH\', \'/interfaces/php/admin','define(\'ADMIN_WWW_BASE_PATH\', \'' . $admin_dir) || 
-				
-				!findReplaceInFile('./source/interfaces/php/api/controller.php','dirname(__FILE__).\'/../../../framework/php','$cashmusic_root = "' . $user_settings['frameworklocation'] . '/framework') || 
 				
 				!findReplaceInFile('./source/framework/php/settings/cashmusic_template.ini.php','driver = "mysql','driver = "sqlite') || 
 				!findReplaceInFile('./source/framework/php/settings/cashmusic_template.ini.php','database = "cashmusic','database = "cashmusic.sqlite') || 
@@ -604,7 +606,23 @@ if (!isset($_POST['installstage'])) {
 				break;
 			}
 
-			$password_hash = hash_hmac('sha256', $user_settings['adminpassword'], $user_settings['systemsalt']);
+			if (!defined('CRYPT_BLOWFISH')) define('CRYPT_BLOWFISH', 0);
+			if (!defined('CRYPT_SHA512')) define('CRYPT_SHA512', 0);
+			if (!defined('CRYPT_SHA256')) define('CRYPT_SHA256', 0);
+
+			if (CRYPT_BLOWFISH + CRYPT_SHA512 + CRYPT_SHA256) {
+				if (CRYPT_BLOWFISH == 1) {
+					$password_hash = crypt(md5($user_settings['adminpassword'] . $user_settings['systemsalt']), '$2a$13$' . md5(time() . $user_settings['systemsalt']) . '$');
+				} else if (CRYPT_SHA512 == 1) {
+					$password_hash = crypt(md5($user_settings['adminpassword'] . $user_settings['systemsalt']), '$6$rounds=6666$' . md5(time() . $user_settings['systemsalt']) . '$');
+				} else if (CRYPT_SHA256 == 1) {
+					$password_hash = crypt(md5($user_settings['adminpassword'] . $user_settings['systemsalt']), '$5$rounds=6666$' . md5(time() . $user_settings['systemsalt']) . '$');
+				}
+			} else {
+				$key = time();
+				$password_hash = $key . '$' . hash_hmac('sha256', md5($user_settings['adminpassword'] . $user_settings['systemsalt']), $key);
+			}
+
 			$data = array(
 				'email_address' => $user_settings['adminemailaccount'],
 				'password'      => $password_hash,

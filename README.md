@@ -7,7 +7,7 @@ The whole thing is designed to work as a freestanding API or integrated with
 publishing and CMS systems like Wordpress or Drupal. This repo contains the core 
 framework, installers, an admin webapp, APIs, demos, and a full suite of tests.
 
-[![Build Status](https://secure.travis-ci.org/cashmusic/DIY.png)](http://travis-ci.org/cashmusic/DIY)
+[![Build Status](https://secure.travis-ci.org/cashmusic/platform.png)](http://travis-ci.org/cashmusic/platform)
 
 ## Requirements
 
@@ -21,18 +21,18 @@ hard to keep the requirements as minimal as possible:
 
 ## Installation 
 
-**Coders:** Just fork/clone this repo, cd into the new /DIY folder, and run: 
+**Coders:** Just fork/clone this repo, cd into the new /platform folder, and run: 
 
 ```php
 make install
 ````
 
 choosing SQLite will get you up and running fastest. Next just point Apache or MAMP 
-at the /DIY directory and view http://localhost/ in a browser.
+at the /platform directory and view http://localhost/ in a browser.
 
   
 **Non-coders:** We've included a web installer specifically meant for installing over 
-FTP to a web host. Just download it [here](https://github.com/cashmusic/DIY/downloads), 
+FTP to a web host. Just download it [here](https://github.com/cashmusic/platform/downloads), 
 create a new folder for it on your web host, upload, and visit in a web browser. The 
 installer will do the rest. 
 
@@ -86,11 +86,11 @@ The PHP Request/Response looks like this:
 
 ## Testing
 
-More about our testing habits in the test suite [README](https://github.com/cashmusic/DIY/blob/master/tests/README.md)
+More about our testing habits in the test suite [README](https://github.com/cashmusic/platform/blob/master/tests/README.md)
 
 ## Admin App
 
-We've got a [README](https://github.com/cashmusic/DIY/blob/master/interfaces/php/admin/README.md) for that dude too.
+We've got a [README](https://github.com/cashmusic/platform/blob/master/interfaces/php/admin/README.md) for that dude too.
 
 ## CASH Music Branches + Tags
 

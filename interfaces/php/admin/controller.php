@@ -102,6 +102,7 @@ if (isset($_POST['login'])) {
 	}
 	$login_details = AdminHelper::doLogin($_POST['address'],$_POST['password'],true,$browseridassertion);
 	if ($login_details !== false) {
+		CASHSystem::startSession();
 		$admin_primary_cash_request->sessionSet('cash_actual_user',$login_details);
 		$admin_primary_cash_request->sessionSet('cash_effective_user',$login_details);
 		if ($browseridassertion) {
@@ -136,11 +137,12 @@ if (isset($_GET['hidebanner'])) {
 }
 
 // include Mustache because you know it's time for that
-include_once(dirname(CASH_PLATFORM_PATH) . '/lib/mustache.php/Mustache.php');
+include_once(dirname(CASH_PLATFORM_PATH) . '/lib/mustache/Mustache.php');
 $cash_admin->mustache_groomer = new Mustache;
 
 // finally, output the template and page-specific markup (checking for current login)
 if ($admin_primary_cash_request->sessionGet('cash_actual_user')) {
+	CASHSystem::startSession();
 	// start buffering output
 	ob_start();
 	// set basic data for the template
@@ -149,8 +151,9 @@ if ($admin_primary_cash_request->sessionGet('cash_actual_user')) {
 	$cash_admin->page_data['ui_page_tip'] = AdminHelper::getPageTipsString();
 	$cash_admin->page_data['section_menu'] = AdminHelper::buildSectionNav();
 	// set empty uid/code, then set if found
-	$cash_admin->page_data['status_code'] = (isset($_SESSION['cash_last_response'])) ? $_SESSION['cash_last_response']['status_code']: '';
-	$cash_admin->page_data['status_uid'] = (isset($_SESSION['cash_last_response'])) ? $_SESSION['cash_last_response']['status_uid']: '';
+	$last_reponse = $admin_primary_cash_request->sessionGetLastResponse();
+	$cash_admin->page_data['status_code'] = (is_array($last_reponse)) ? $last_reponse['status_code']: '';
+	$cash_admin->page_data['status_uid'] = (is_array($last_reponse)) ? $last_reponse['status_uid']: '';
 	// figure out the section color and current section name:
 	$cash_admin->page_data['specialcolor'] = '';
 	$exploded_base = explode('_',BASE_PAGENAME);
